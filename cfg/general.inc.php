@@ -1,9 +1,9 @@
 <?php
 
 // db
-const DB_HOST = '127.0.0.1';
+const DB_HOST = 'aeon_db';
 const DB_USER = 'root';
-const DB_PASS = '';
+const DB_PASS = 'root_passwd';
 const DB_NAME = 'test';
 // common
 const SITE_SCHEME = 'http';
