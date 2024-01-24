@@ -48,4 +48,52 @@ class User {
         return $items;
     }
 
+    public static function users_list($d = []) {
+        // vars
+        $f = isset($d['filter']) && is_array($d['filter']) ? $d['filter'] : [];
+        $offset = isset($d['offset']) && is_numeric($d['offset']) ? $d['offset'] : 0;
+        $where_formats = [
+            'phone' => 'CAST(phone AS CHAR) LIKE \'%%%1$s%%\'',
+            'name' => '(first_name LIKE \'%%%1$s%%\' OR last_name LIKE \'%%%1$s%%\')',
+            'email' => 'email LIKE \'%%%1$s%%\''
+        ];
+        $limit = 20;
+        $items = [];
+        $url = [];
+        // where
+        $where = [];
+        foreach ($f as $k => $v) {
+            if (empty($v)) continue;
+            $where[] = sprintf($where_formats[$k], $v);
+            $url[] = "$k=$v";
+        }
+        $where = $where ? "WHERE ".implode(" AND ", $where) : "";
+        // info
+        $q = DB::query("SELECT * 
+            FROM users ".$where." ORDER BY user_id LIMIT ".$offset.", ".$limit.";") or die (DB::error());
+        while ($row = DB::fetch_row($q)) {
+            $items[] = [
+                'id' => (int) $row['user_id'],
+                'plot_id' => $row['plot_id'],
+                'first_name' => $row['first_name'],
+                'last_name' => $row['last_name'],
+                'phone' => phone_formatting($row['phone']),
+                'email' => $row['email'],
+                'last_login' => $row['last_login']
+            ];
+        }
+        // paginator
+        $q = DB::query("SELECT count(*) FROM users ".$where.";");
+        $count = ($row = DB::fetch_row($q)) ? $row['count(*)'] : 0;
+        $url = 'users?' . ($url ? implode('&', $url).'&' : '');
+        paginator($count, $offset, $limit, $url, $paginator);
+        // output
+        return ['items' => $items, 'paginator' => $paginator];
+    }
+
+    public static function users_fetch($d = []) {
+        $info = User::users_list(['filter' => $d]);
+        HTML::assign('users', $info['items']);
+        return ['html' => HTML::fetch('./partials/users_table.html'), 'paginator' => $info['paginator']];
+    }
 }
