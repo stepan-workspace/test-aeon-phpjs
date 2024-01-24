@@ -124,6 +124,23 @@ let common = {
         });
     },
 
+    complex_search_do: (act, target_group) => {
+        // vars
+        let data = {};
+        let location = { dpt: 'search', act: act };
+        const fields = document.querySelectorAll(`[data-target="${target_group}"]`);
+
+        fields.forEach((item) => {
+            data[item.getAttribute('data-name')] = gv(item.getAttribute('id'));
+        });
+
+        // call
+        request({location: location, data: data}, (result) => {
+            html('table', result.html);
+            html('paginator', result.paginator);
+        });
+    },
+
     // plots
 
     plot_edit_window: (plot_id, e) => {

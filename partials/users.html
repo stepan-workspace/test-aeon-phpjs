@@ -1,0 +1,32 @@
+<div class="sub_header">
+    <div>
+        <div class="btn_sub" onclick="common.plot_edit_window();">Add</div>
+    </div>
+    <div>
+        <div id="paginator">{$paginator}</div>
+        <div class="input_group">
+            <i class="icon_search"></i>
+            <input id="filter_phone" type="text" value="{$filter.phone}" placeholder="Phone"
+                oninput="common.complex_search_do('users', 'user_filters');"
+                data-name="phone"
+                data-target="user_filters">
+        </div>
+        <div class="input_group">
+            <i class="icon_search"></i>
+            <input id="filter_name" type="text" value="{$filter.name}" placeholder="Name"
+                oninput="common.complex_search_do('users', 'user_filters');"
+                data-name="name" 
+                data-target="user_filters">
+        </div>
+        <div class="input_group">
+            <i class="icon_search"></i>
+            <input id="filter_email" type="text" value="{$filter.email}" placeholder="Email"
+                oninput="common.complex_search_do('users', 'user_filters');"
+                data-name="email"
+                data-target="user_filters">
+        </div>
+    </div>
+</div>
+<div id="table">
+    {include file="./partials/users_table.html"}
+</div>
