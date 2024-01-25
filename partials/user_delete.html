@@ -1,0 +1,17 @@
+<div class="modal_head">
+    <i class="icon_close" onclick="common.modal_hide()"></i>
+    <span>Confirm action</span>
+</div>
+<div class="modal_body">
+    <p>You are going to delete user {$user.first_name} {$user.last_name} #{$user.id}.</p>
+    <p>This action cannot be undone.</p>
+    <p>Continue?</p>
+    <div class="modal_controls">
+        <div>
+            <div class="btn_modal" onclick="common.user_delete_update({$user.id});">Delete</div>
+        </div>
+        <div>
+            <div class="btn_modal light" onclick="common.modal_hide();">Cancel</div>
+        </div>
+    </div>
+</div>
