@@ -174,6 +174,84 @@ let common = {
             html('table', result.html);
         });
     },
+
+    // user
+
+    user_edit_window: (user_id, e) => {
+        // actions
+        cancel_event(e);
+        common.menu_popup_hide_all('all');
+        // vars
+        let data = {user_id: user_id};
+        let location = {dpt: 'user', act: 'edit_window'};
+        // call
+        request({location: location, data: data}, (result) => {
+            common.modal_show(400, result.html);
+        });
+    },
+
+    user_edit_update: (user_id = 0) => {
+        // vars
+        let url_params = new URLSearchParams(document.location.search);
+        let location = {dpt: 'user', act: 'edit_update'};
+        let data = {
+            first_name: gv('first_name'),
+            last_name: gv('last_name'),
+            phone: gv('phone'),
+            email: gv('email'),
+        };
+
+        try {
+            Object.entries(data).forEach(([key, value]) => {
+                remove_class(key, 'error');
+                if (!value) {
+                    add_class(key, 'error');
+                    throw `Error: "${key}" field cannot be empty`;
+                }
+            });
+        } catch (e) {
+            console.log(e);
+            return false;
+        }
+
+        data['user_id'] = user_id;
+        data['plot_id'] = gv('plot_id');
+        data['offset'] = url_params.get("offset") | 0;
+        // call
+        request({location: location, data: data}, (result) => {
+            common.modal_hide();
+            html('table', result.html);
+        });
+    },
+
+    user_delete_window: (user_id, e) => {
+        // actions
+        cancel_event(e);
+        common.menu_popup_hide_all('all');
+        // vars
+        let data = {user_id: user_id};
+        let location = {dpt: 'user', act: 'delete_window'};
+        // call
+        request({location: location, data: data}, (result) => {
+            common.modal_show(400, result.html);
+        });
+    },
+
+    user_delete_update: (user_id) => {
+        // vars
+        let url_params = new URLSearchParams(document.location.search);
+        let location = {dpt: 'user', act: 'delete_update'};
+        let data = {
+            user_id: user_id,
+            offset: url_params.get("offset") | 0
+        };
+        // call
+        request({location: location, data: data}, (result) => {
+            common.modal_hide();
+            html('table', result.html);
+        });
+    },
+
 }
 
 add_event(document, 'DOMContentLoaded', common.init);
